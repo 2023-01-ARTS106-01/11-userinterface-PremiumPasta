@@ -31,6 +31,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 public class MouseController : MonoBehaviour 
 {
@@ -44,6 +45,9 @@ public class MouseController : MonoBehaviour
     public AudioSource jetpackAudio;
     public AudioSource footstepsAudio;
     public ParallaxScroll parallax;
+    //public Text coinsLabel;
+    public GameObject restartDialog;
+
 
     private Animator animator;
     private bool grounded;
@@ -52,7 +56,9 @@ public class MouseController : MonoBehaviour
 
     void Start () 
     {
-        animator = GetComponent<Animator>();	
+        animator = GetComponent<Animator>();
+        restartDialog.SetActive(false);
+
     }
 
     void FixedUpdate () 
@@ -102,6 +108,8 @@ public class MouseController : MonoBehaviour
 
     void HitByLaser(Collider2D laserCollider) 
     {
+        restartDialog.SetActive(true);
+
         if (!dead) 
         {
             laserCollider.gameObject.GetComponent<AudioSource>().Play();
@@ -115,12 +123,14 @@ public class MouseController : MonoBehaviour
         coins++;
         Destroy(coinCollider.gameObject);
         AudioSource.PlayClipAtPoint(coinCollectSound, transform.position);
+       // coinsLabel.text = coins.ToString();
+
     }
 
     void OnGUI() 
     {
         DisplayCoinsCount();
-        DisplayRestartButton();
+       // DisplayRestartButton();
     }
 
     void DisplayCoinsCount() 
@@ -137,18 +147,18 @@ public class MouseController : MonoBehaviour
 	    GUI.Label(labelRect, coins.ToString(), style);
     }
 
-    void DisplayRestartButton() 
-    {
-        if (dead && grounded) 
-        {
-            Rect buttonRect = new Rect(Screen.width * 0.35f, Screen.height * 0.45f, Screen.width * 0.30f, Screen.height * 0.1f);
-	        if (GUI.Button(buttonRect, "Tap to restart!")) 
-	        {
+    //void DisplayRestartButton() 
+   // {
+       // if (dead && grounded) 
+        //{
+           // Rect buttonRect = new Rect(Screen.width * 0.35f, Screen.height * 0.45f, Screen.width * 0.30f, Screen.height * 0.1f);
+	       // if (GUI.Button(buttonRect, "Tap to restart!")) 
+	        //{
 	        	
-				SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
-	        }
-	    }
-    }
+			//	SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+	        //}
+	   // }
+   // }
 
   void AdjustFootstepsAndJetpackSound(bool jetpackActive) 
   {
@@ -156,4 +166,14 @@ public class MouseController : MonoBehaviour
       jetpackAudio.enabled =  !dead && !grounded;
 	  jetpackAudio.volume = jetpackActive ? 1.0f : 0.5f;        
   }
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ExitToMenu()
+    {
+        SceneManager.LoadScene("MenuScene");
+    }
+
 }
