@@ -8,7 +8,7 @@ public class InventoryItemButton : MonoBehaviour
     private Text buttonText;
     private string[] itemTypes = { "Armor", "Weapon", "Spell" };
     public int typeIndex;
-    private void Awake()
+    public void Awake()
     {
         typeIndex = Random.Range(0, 3);
         buttonText = GetComponentInChildren<Text>();
